@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { ArrowUpDown, Settings, ChevronDown, X, ArrowDownIcon, Info } from "lucide-react"
+import { ArrowUpDown, Settings, ChevronDown, X, ArrowDownIcon, Info, ChevronUp } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface Token {
@@ -25,13 +25,14 @@ const tokens: Token[] = [
 
 export function SwapInterface() {
   const [fromToken, setFromToken] = useState<Token>(tokens[0]) // ETH
-  const [toToken, setToToken] = useState<Token | null>(tokens[2]) // USDC
+  const [toToken, setToToken] = useState<Token | null>(tokens[3]) // USDT
   const [fromAmount, setFromAmount] = useState("0.001")
-  const [toAmount, setToAmount] = useState("4.43601")
+  const [toAmount, setToAmount] = useState("4.45489")
   const [showFromTokens, setShowFromTokens] = useState(false)
   const [showToTokens, setShowToTokens] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [showMoreDetails, setShowMoreDetails] = useState(false)
+  const [showExpandedDetails, setShowExpandedDetails] = useState(false)
 
   const handleSwapTokens = () => {
     if (toToken) {
@@ -339,13 +340,64 @@ export function SwapInterface() {
         Review
       </Button>
 
-      <div className="flex items-center justify-between text-sm text-muted-foreground mt-3">
-        <span>1 USDC = 0.00025428 ETH ($1.00)</span>
-        <div className="flex items-center gap-1">
-          <span>⛽</span>
-          <span>$0.71</span>
-          <ChevronDown className="h-3 w-3" />
-        </div>
+      <div className="space-y-2">
+        <Button
+          variant="ghost"
+          onClick={() => setShowExpandedDetails(!showExpandedDetails)}
+          className="w-full flex items-center justify-between text-sm text-muted-foreground hover:text-foreground hover:bg-accent/50 rounded-xl p-3 h-auto"
+        >
+          <span>1 USDT = 0.000224472 ETH ($1.00)</span>
+          <div className="flex items-center gap-1">
+            {showExpandedDetails ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+          </div>
+        </Button>
+
+        {showExpandedDetails && (
+          <div className="space-y-3 px-3 pb-2">
+            <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center gap-2">
+                <span className="text-muted-foreground">Fee (0.25%)</span>
+                <Info className="h-3 w-3 text-muted-foreground" />
+              </div>
+              <span className="text-foreground">$0.01</span>
+            </div>
+
+            <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center gap-2">
+                <span className="text-muted-foreground">Network cost</span>
+                <Info className="h-3 w-3 text-muted-foreground" />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs">⛽</span>
+                <span className="text-foreground">$0.28</span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center gap-2">
+                <span className="text-muted-foreground">Order routing</span>
+                <Info className="h-3 w-3 text-muted-foreground" />
+              </div>
+              <span className="text-foreground">Uniswap API</span>
+            </div>
+
+            <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center gap-2">
+                <span className="text-muted-foreground">Price impact</span>
+                <Info className="h-3 w-3 text-muted-foreground" />
+              </div>
+              <span className="text-foreground">-0.05%</span>
+            </div>
+
+            <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center gap-2">
+                <span className="text-muted-foreground">Max slippage</span>
+                <Info className="h-3 w-3 text-muted-foreground" />
+              </div>
+              <span className="text-foreground">Auto 5.5%</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {showModal && <SwapModal />}
